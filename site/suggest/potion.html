@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sadida — Suggest a Potion</title>
+    <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+    <header>
+        <h1>🧪 Suggest a Potion</h1>
+    </header>
+    <main class="container">
+        <div data-error-host></div>
+
+        <form id="potion-form" novalidate>
+            <fieldset>
+                <legend>Identity</legend>
+                <label>
+                    <span class="required">Sadida version</span>
+                    <input type="text" name="modVersion" required placeholder="v0.3.22" />
+                </label>
+                <label>
+                    <span class="required">Potion name</span>
+                    <input type="text" name="potionName" maxlength="32" required />
+                </label>
+                <label>
+                    <span class="required">Rarity</span>
+                    <select name="rarity" required>
+                        <option value="">—</option>
+                        <option value="Common">Common</option>
+                        <option value="Uncommon">Uncommon</option>
+                        <option value="Rare">Rare</option>
+                    </select>
+                </label>
+                <label>
+                    <span class="required">Target type</span>
+                    <select name="targetType" required>
+                        <option value="">—</option>
+                        <option value="Self">Self</option>
+                        <option value="SingleEnemy">Single enemy</option>
+                        <option value="AllEnemies">All enemies</option>
+                        <option value="None">No target</option>
+                    </select>
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Effect</legend>
+                <label>
+                    <span class="required">Effect</span>
+                    <textarea name="effect" rows="5" required placeholder="What drinking/throwing the potion does. Numbers welcome."></textarea>
+                </label>
+            </fieldset>
+
+            <div>
+                <button type="submit" class="primary">Submit potion suggestion</button>
+                &nbsp;<a href="./">Back</a>
+            </div>
+        </form>
+    </main>
+    <script type="module" src="../js/forms/potion.js"></script>
+</body>
+</html>

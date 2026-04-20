@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sadida — Suggest a Relic</title>
+    <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+    <header>
+        <h1>🏺 Suggest a Relic</h1>
+    </header>
+    <main class="container">
+        <div data-error-host></div>
+
+        <form id="relic-form" novalidate>
+            <fieldset>
+                <legend>Identity</legend>
+                <label>
+                    <span class="required">Sadida version</span>
+                    <input type="text" name="modVersion" required placeholder="v0.3.22" />
+                </label>
+                <label>
+                    <span class="required">Relic name</span>
+                    <input type="text" name="relicName" maxlength="32" required />
+                </label>
+                <label>
+                    <span class="required">Rarity</span>
+                    <select name="rarity" required>
+                        <option value="">—</option>
+                        <option value="Common">Common</option>
+                        <option value="Uncommon">Uncommon</option>
+                        <option value="Rare">Rare</option>
+                        <option value="Shop">Shop</option>
+                        <option value="Boss">Boss</option>
+                    </select>
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Mechanics</legend>
+                <label>
+                    <span class="required">Trigger</span>
+                    <select name="trigger" required>
+                        <option value="">—</option>
+                        <option value="OnPickup">On pickup</option>
+                        <option value="SOT">Start of turn</option>
+                        <option value="EOT">End of turn</option>
+                        <option value="OnCardPlay">On card play</option>
+                        <option value="OnDamage">On damage</option>
+                        <option value="Passive">Passive</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Stack type</span>
+                    <select name="stackType">
+                        <option value="">—</option>
+                        <option value="None">None</option>
+                        <option value="Counter">Counter (accumulates)</option>
+                        <option value="Charge">Charge (N uses then done)</option>
+                    </select>
+                </label>
+                <label>
+                    <span class="required">Effect</span>
+                    <textarea name="effect" rows="5" required
+                        placeholder="What it does when it triggers. Specific numbers appreciated."></textarea>
+                </label>
+                <label>
+                    <span>Art concept</span>
+                    <textarea name="artConcept" rows="2"></textarea>
+                </label>
+            </fieldset>
+
+            <div>
+                <button type="submit" class="primary">Submit relic suggestion</button>
+                &nbsp;<a href="./">Back</a>
+            </div>
+        </form>
+    </main>
+    <script type="module" src="../js/forms/relic.js"></script>
+</body>
+</html>

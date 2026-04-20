@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sadida — Suggest a Card</title>
+    <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+    <header>
+        <h1>🃏 Suggest a Card</h1>
+        <p>All mechanical fields are validated — if this gets picked up, it goes straight onto the backlog.</p>
+    </header>
+    <main class="container">
+        <div data-error-host></div>
+
+        <form id="card-form" novalidate>
+            <fieldset>
+                <legend>Identity</legend>
+                <label>
+                    <span class="required">Sadida version</span>
+                    <input type="text" name="modVersion" required placeholder="v0.3.22" />
+                </label>
+                <label>
+                    <span class="required">Card name</span>
+                    <input type="text" name="cardName" maxlength="32" required
+                        placeholder="e.g. Verdant Strike" />
+                    <span class="helptext">Letters, spaces, apostrophes, hyphens. Max 32 chars.</span>
+                </label>
+                <label>
+                    <span class="required">Card type</span>
+                    <select name="cardType" required>
+                        <option value="">—</option>
+                        <option value="Attack">Attack</option>
+                        <option value="Skill">Skill</option>
+                        <option value="Power">Power</option>
+                    </select>
+                </label>
+                <label>
+                    <span class="required">Rarity</span>
+                    <select name="rarity" required>
+                        <option value="">—</option>
+                        <option value="Basic">Basic</option>
+                        <option value="Common">Common</option>
+                        <option value="Uncommon">Uncommon</option>
+                        <option value="Rare">Rare</option>
+                    </select>
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Costs &amp; stats</legend>
+                <label>
+                    <span class="required">Energy cost</span>
+                    <input type="number" name="energyCost" min="0" max="9" step="1" required />
+                </label>
+                <label>
+                    <span>Seed cost</span>
+                    <input type="number" name="seedCost" min="0" max="9" step="1" placeholder="0 if none" />
+                </label>
+                <label>
+                    <span>Damage</span>
+                    <input type="number" name="damage" min="0" max="99" step="1"
+                        placeholder="(required if Attack, leave blank otherwise)" />
+                </label>
+                <label>
+                    <span>Block</span>
+                    <input type="number" name="block" min="0" max="99" step="1" placeholder="0 if none" />
+                </label>
+                <label>
+                    <span>Keywords</span>
+                    <div class="checkbox-row">
+                        <label><input type="checkbox" name="keywords" value="Exhaust" /><span>Exhaust</span></label>
+                        <label><input type="checkbox" name="keywords" value="Retain" /><span>Retain</span></label>
+                        <label><input type="checkbox" name="keywords" value="Innate" /><span>Innate</span></label>
+                        <label><input type="checkbox" name="keywords" value="Ethereal" /><span>Ethereal</span></label>
+                        <label><input type="checkbox" name="keywords" value="Unplayable" /><span>Unplayable</span></label>
+                        <label><input type="checkbox" name="keywords" value="Doll" /><span>Doll</span></label>
+                    </div>
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Effect</legend>
+                <label>
+                    <span class="required">Base effect</span>
+                    <textarea name="baseEffect" rows="4" required
+                        placeholder="Describe what the card does in play. Numbers as placeholders, e.g. &quot;Deal {Damage}. If you have a Doll, also draw 1.&quot;"></textarea>
+                </label>
+                <label>
+                    <span>Upgrade effect</span>
+                    <textarea name="upgradeEffect" rows="3"
+                        placeholder="(optional) What changes on + ?"></textarea>
+                </label>
+                <label>
+                    <span>Art concept</span>
+                    <textarea name="artConcept" rows="2" placeholder="(optional) a sentence about the visual direction"></textarea>
+                </label>
+                <label>
+                    <span>Inspiration</span>
+                    <input type="text" name="inspiration" maxlength="200"
+                        placeholder="(optional) — e.g. &quot;Like STS1's Bouncing Flask but…&quot;" />
+                </label>
+            </fieldset>
+
+            <div>
+                <button type="submit" class="primary">Submit card suggestion</button>
+                &nbsp;<a href="./">Back</a>
+            </div>
+        </form>
+    </main>
+    <script type="module" src="../js/forms/card.js"></script>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sadida — Bug Report</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header>
+        <h1>🐛 Bug Report</h1>
+        <p>Crash, stack trace, or something visibly broken. If it's a balance complaint or awkward UI, use <a href="issue.html">Issue</a> instead.</p>
+    </header>
+    <main class="container">
+        <details>
+            <summary>How to grab the console log</summary>
+            <p style="margin-top:0.5rem">
+                Open an Explorer window and paste this into the address bar:
+            </p>
+            <pre style="background:#15191a;padding:0.5rem;border-radius:6px;overflow-x:auto">%APPDATA%\Godot\app_userdata\Slay the Spire 2\logs</pre>
+            <p>
+                Open the most recent <code>.log</code> file, copy the contents (Ctrl+A → Ctrl+C), and paste
+                into the Console Log field below. The last ~200 lines around the crash are usually enough —
+                paste the whole thing if you aren't sure.
+            </p>
+        </details>
+
+        <div data-error-host></div>
+
+        <form id="bug-form" novalidate>
+            <fieldset>
+                <legend>Mod context</legend>
+                <label>
+                    <span class="required">Sadida version</span>
+                    <input type="text" name="modVersion" required placeholder="v0.3.22" />
+                    <span class="helptext">Check <code>mods/Sadida/Sadida.json</code> — <code>"version"</code> field.</span>
+                </label>
+                <label>
+                    <span class="required">Multiplayer?</span>
+                    <select name="multiplayer" required>
+                        <option value="">—</option>
+                        <option value="solo">Solo</option>
+                        <option value="host">Multiplayer — I was host</option>
+                        <option value="client">Multiplayer — I was a client</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Run seed</span>
+                    <input type="text" name="runSeed" maxlength="32" placeholder="(optional — from top bar or save file)" />
+                </label>
+                <label>
+                    <span>Other mods loaded</span>
+                    <textarea name="otherMods" rows="3" placeholder="(optional) Paste the folder names under mods/ so we can rule out interactions."></textarea>
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>What happened</legend>
+                <label>
+                    <span class="required">Summary</span>
+                    <input type="text" name="summary" maxlength="140" required
+                        placeholder="One sentence describing the bug" />
+                </label>
+                <label>
+                    <span class="required">Description</span>
+                    <textarea name="description" rows="5" required
+                        placeholder="What broke, what you were doing, what you expected instead."></textarea>
+                </label>
+                <label>
+                    <span class="required">Repro steps</span>
+                    <textarea name="reproSteps" rows="5" required
+                        placeholder="1. Start combat&#10;2. Play Explodoll while…"></textarea>
+                </label>
+                <label>
+                    <span>Card / Encounter / Context</span>
+                    <input type="text" name="context" maxlength="500"
+                        placeholder="e.g. &quot;Shared Strike vs Louse Progenitor&quot;" />
+                </label>
+                <label>
+                    <span>Console log</span>
+                    <textarea name="consoleLog" rows="8"
+                        placeholder="Paste the tail of the Godot log here (see instructions above). Max ~50 KB."></textarea>
+                </label>
+            </fieldset>
+
+            <div>
+                <button type="submit" class="primary">Submit bug report</button>
+                &nbsp;<a href="index.html">Cancel</a>
+            </div>
+        </form>
+    </main>
+    <script type="module" src="js/forms/bug.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sadida — Issue Report</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header>
+        <h1>💡 Issue</h1>
+        <p>Not a crash or stack trace. Awkward UI, confusing text, weird balance, flow problems — things that should be better but aren't broken.</p>
+    </header>
+    <main class="container">
+        <div data-error-host></div>
+
+        <form id="issue-form" novalidate>
+            <fieldset>
+                <legend>Context</legend>
+                <label>
+                    <span class="required">Sadida version</span>
+                    <input type="text" name="modVersion" required placeholder="v0.3.22" />
+                </label>
+                <label>
+                    <span class="required">Area</span>
+                    <select name="area" required>
+                        <option value="">—</option>
+                        <option value="balance">Balance</option>
+                        <option value="ui">UI</option>
+                        <option value="text">Card / power text</option>
+                        <option value="translation">Translation / phrasing</option>
+                        <option value="flow">Run flow / pacing</option>
+                        <option value="other">Other</option>
+                    </select>
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>What's off</legend>
+                <label>
+                    <span class="required">Summary</span>
+                    <input type="text" name="summary" maxlength="140" required
+                        placeholder="One sentence describing the problem" />
+                </label>
+                <label>
+                    <span class="required">Description</span>
+                    <textarea name="description" rows="6" required
+                        placeholder="What you noticed, when, and why it feels wrong."></textarea>
+                </label>
+                <label>
+                    <span>What behavior would you expect instead?</span>
+                    <textarea name="expectedBehavior" rows="4"
+                        placeholder="(optional) — what does 'fixed' look like?"></textarea>
+                </label>
+            </fieldset>
+
+            <div>
+                <button type="submit" class="primary">Submit issue</button>
+                &nbsp;<a href="index.html">Cancel</a>
+            </div>
+        </form>
+    </main>
+    <script type="module" src="js/forms/issue.js"></script>
+</body>
+</html>

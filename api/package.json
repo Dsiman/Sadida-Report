@@ -1,0 +1,19 @@
+{
+  "name": "sadida-report-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Serverless function that validates feedback submissions and writes them to MongoDB Atlas.",
+  "main": "api/submit.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "mongodb": "^6.12.0"
+  },
+  "devDependencies": {
+    "vercel": "^39.0.0"
+  }
+}

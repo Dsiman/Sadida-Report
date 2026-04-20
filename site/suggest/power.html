@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sadida — Suggest a Power</title>
+    <link rel="stylesheet" href="../css/style.css" />
+</head>
+<body>
+    <header>
+        <h1>✨ Suggest a Power</h1>
+        <p>A stat/state effect that persists on a creature — like Strength, Poison, or one of Sadida's doll auras.</p>
+    </header>
+    <main class="container">
+        <div data-error-host></div>
+
+        <form id="power-form" novalidate>
+            <fieldset>
+                <legend>Identity</legend>
+                <label>
+                    <span class="required">Sadida version</span>
+                    <input type="text" name="modVersion" required placeholder="v0.3.22" />
+                </label>
+                <label>
+                    <span class="required">Power name</span>
+                    <input type="text" name="powerName" maxlength="32" required />
+                </label>
+                <label>
+                    <span class="required">Applies to</span>
+                    <select name="appliesTo" required>
+                        <option value="">—</option>
+                        <option value="Player">Player</option>
+                        <option value="Enemy">Enemy</option>
+                        <option value="Doll">Doll</option>
+                        <option value="AnyCreature">Any creature</option>
+                    </select>
+                </label>
+                <label>
+                    <span class="required">Power type</span>
+                    <select name="powerType" required>
+                        <option value="">—</option>
+                        <option value="Buff">Buff</option>
+                        <option value="Debuff">Debuff</option>
+                    </select>
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Mechanics</legend>
+                <label>
+                    <span>Stack type</span>
+                    <select name="stackType">
+                        <option value="">—</option>
+                        <option value="None">None</option>
+                        <option value="Counter">Counter (numeric, stacks)</option>
+                        <option value="Single">Single (1 or 0)</option>
+                    </select>
+                </label>
+                <label>
+                    <span>Trigger hook</span>
+                    <select name="triggerHook">
+                        <option value="">—</option>
+                        <option value="AfterCardPlayed">After card played</option>
+                        <option value="AfterDamageReceived">After damage received</option>
+                        <option value="SOT">Start of turn</option>
+                        <option value="EOT">End of turn</option>
+                        <option value="Passive">Passive (always applies)</option>
+                    </select>
+                </label>
+                <label>
+                    <span class="required">Effect</span>
+                    <textarea name="effect" rows="5" required
+                        placeholder="What happens on trigger. Reference the `Amount` stack where relevant."></textarea>
+                </label>
+            </fieldset>
+
+            <div>
+                <button type="submit" class="primary">Submit power suggestion</button>
+                &nbsp;<a href="./">Back</a>
+            </div>
+        </form>
+    </main>
+    <script type="module" src="../js/forms/power.js"></script>
+</body>
+</html>
