@@ -20,7 +20,9 @@
 //   503  Mongo unreachable
 
 import { MongoClient } from 'mongodb';
-import Ajv from 'ajv';
+// The schemas declare $schema: draft/2020-12; default Ajv export is draft-07
+// and rejects them with "no schema with key or ref ...". Import the 2020 build.
+import Ajv from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import { createHash } from 'crypto';
 
