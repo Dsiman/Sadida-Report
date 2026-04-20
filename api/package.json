@@ -2,6 +2,7 @@
   "name": "sadida-report-api",
   "version": "1.0.0",
   "private": true,
+  "type": "module",
   "description": "Serverless function that validates feedback submissions and writes them to MongoDB Atlas.",
   "main": "api/submit.js",
   "scripts": {
