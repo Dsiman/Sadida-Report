@@ -23,18 +23,15 @@ import { MongoClient } from 'mongodb';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { createHash } from 'crypto';
-import { createRequire } from 'module';
 
-// Use createRequire for JSON so we don't depend on the `with { type: 'json' }`
-// import-attribute syntax, which is only stable on Node 20.10+/22+. This works
-// on every supported Vercel runtime and still lets the bundler see the paths.
-const require = createRequire(import.meta.url);
-const bugSchema = require('./schemas/bug.json');
-const issueSchema = require('./schemas/issue.json');
-const cardSchema = require('./schemas/suggestion-card.json');
-const relicSchema = require('./schemas/suggestion-relic.json');
-const potionSchema = require('./schemas/suggestion-potion.json');
-const powerSchema = require('./schemas/suggestion-power.json');
+import {
+    bugSchema,
+    issueSchema,
+    cardSchema,
+    relicSchema,
+    potionSchema,
+    powerSchema,
+} from './schemas.js';
 
 // ───── Ajv is expensive to construct; build once per cold start ─────
 const ajv = addFormats(new Ajv({ allErrors: true, removeAdditional: 'all' }));
