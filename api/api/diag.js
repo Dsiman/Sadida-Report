@@ -41,6 +41,22 @@ export default async function handler(req, res) {
         const require = createRequire(import.meta.url);
         return require('./schemas/bug.json');
     });
+    await tryStep('import ./schemas.js', async () => {
+        const m = await import('./schemas.js');
+        return Object.keys(m);
+    });
+    await tryStep('compile bug schema', async () => {
+        const Ajv = (await import('ajv')).default;
+        const addFormats = (await import('ajv-formats')).default;
+        const { bugSchema } = await import('./schemas.js');
+        const ajv = new Ajv({ allErrors: true, removeAdditional: 'all' });
+        addFormats(ajv);
+        return ajv.compile(bugSchema);
+    });
+    await tryStep('import ./submit.js (full module)', async () => {
+        const m = await import('./submit.js');
+        return typeof m.default;
+    });
 
     res.status(200).json({ results });
 }
