@@ -23,13 +23,18 @@ import { MongoClient } from 'mongodb';
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
 import { createHash } from 'crypto';
+import { createRequire } from 'module';
 
-import bugSchema from './schemas/bug.json' with { type: 'json' };
-import issueSchema from './schemas/issue.json' with { type: 'json' };
-import cardSchema from './schemas/suggestion-card.json' with { type: 'json' };
-import relicSchema from './schemas/suggestion-relic.json' with { type: 'json' };
-import potionSchema from './schemas/suggestion-potion.json' with { type: 'json' };
-import powerSchema from './schemas/suggestion-power.json' with { type: 'json' };
+// Use createRequire for JSON so we don't depend on the `with { type: 'json' }`
+// import-attribute syntax, which is only stable on Node 20.10+/22+. This works
+// on every supported Vercel runtime and still lets the bundler see the paths.
+const require = createRequire(import.meta.url);
+const bugSchema = require('./schemas/bug.json');
+const issueSchema = require('./schemas/issue.json');
+const cardSchema = require('./schemas/suggestion-card.json');
+const relicSchema = require('./schemas/suggestion-relic.json');
+const potionSchema = require('./schemas/suggestion-potion.json');
+const powerSchema = require('./schemas/suggestion-power.json');
 
 // ───── Ajv is expensive to construct; build once per cold start ─────
 const ajv = addFormats(new Ajv({ allErrors: true, removeAdditional: 'all' }));
