@@ -37,8 +37,10 @@ One-time setup, end-to-end. Expect ~30 minutes start to finish if you've done Ve
 3. **Environment variables** (Project Settings → Environment Variables):
    - `MONGODB_URI` — the SRV string from Atlas step 8.
    - `MONGODB_DB` — `reports`
+   - `MONGODB_AUTH_DB` — `auth` (separate database in the same cluster that stores admin logins)
    - `ALLOWED_ORIGIN` — e.g. `https://damianisaacs.github.io`. Include the origin only, no path.
    - `IP_SALT` — any long random string (e.g. `openssl rand -hex 16`). Used to hash submitter IPs so you can rate-limit without storing raw addresses.
+   - `JWT_SECRET` — long random string used to sign admin session tokens. Generate with `node -e "console.log(require('crypto').randomBytes(48).toString('base64'))"` or the PowerShell equivalent. Rotating it invalidates every existing admin session.
 4. **Deploy.** Vercel builds automatically on push; confirm `https://<project>.vercel.app/api/submit` returns `405 Method Not Allowed` to a GET (means the function loaded and rejected the wrong verb).
 5. **Smoke test POST** from your machine:
    ```sh
@@ -62,14 +64,38 @@ One-time setup, end-to-end. Expect ~30 minutes start to finish if you've done Ve
    ```
 5. Smoke test by loading the landing page, picking Bug Report, filling the form, submitting — should redirect to `/thanks.html` and produce a document in Mongo.
 
-## 4. Optional polish
+## 4. Admin panel
+
+Admin login and management UI live on the same Pages site:
+
+- `https://<user>.github.io/Sadida-Report/login.html` — login + first-admin registration
+- `https://<user>.github.io/Sadida-Report/admin.html` — submissions list, status/tags/notes editing, delete
+
+### First-time admin setup
+
+1. Confirm `JWT_SECRET` and `MONGODB_AUTH_DB` are set on Vercel (see step 3 above).
+2. Open `login.html`, switch to the **"Create first admin"** tab, enter an email and a ≥12-character password, submit.
+3. That account is stored in `auth.users` with `role: "admin"`; the register endpoint refuses all further requests until that user is deleted from Atlas.
+4. You'll be redirected to `admin.html` with a signed JWT in `localStorage` (24-hour expiry).
+
+### Adding more admins later
+
+There's no self-service path. Either:
+- Insert another user document into `auth.users` directly via Atlas (password must be scrypt-hashed the same way — easier to just delete the first admin and re-register), or
+- Ping me for an admin-protected create-user endpoint.
+
+### Revoking access
+
+Rotate `JWT_SECRET` on Vercel and redeploy. All existing tokens become invalid immediately.
+
+## 5. Optional polish
 
 - **Custom domain.** Add `report.sadida-mod.com` (or whatever) to Pages + Vercel, update `ALLOWED_ORIGIN` and `API_BASE` accordingly.
-- **Triage dashboard.** Either use Atlas's built-in Collections browser for now, or build a small password-gated `/triage/` page that queries the function in read mode.
 - **Cloudflare Turnstile.** If spam hits, sign up for Turnstile (free), embed the widget on each form, validate the token in `api/submit.js` before accepting.
 
-## 5. Rotation / maintenance
+## 6. Rotation / maintenance
 
 - **Rotate the Mongo user password** every 6-12 months: Atlas → Database Access → Edit → New password → update Vercel env var → redeploy.
 - **Rotate `IP_SALT`** quarterly to limit how long any single hash is correlate-able.
+- **Rotate `JWT_SECRET`** quarterly (or immediately if you suspect a leak). Invalidates every admin session.
 - **Back up the `submissions` collection** monthly via Atlas → Backups or `mongodump`. M0 doesn't include scheduled backups.

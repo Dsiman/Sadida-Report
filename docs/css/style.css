@@ -214,3 +214,231 @@ button.primary:disabled {
     border-left-color: var(--green);
     color: #d8ffd8;
 }
+
+/* --------------------------------------------------------------------
+   Admin UI (login + submissions panel)
+   -------------------------------------------------------------------- */
+
+.admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 2rem 1.25rem 1rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.admin-container {
+    max-width: 1100px;
+}
+
+button.ghost {
+    padding: 0.5rem 0.9rem;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid #334033;
+    border-radius: 6px;
+    font: inherit;
+    cursor: pointer;
+}
+button.ghost:hover { border-color: var(--green); }
+
+button.danger {
+    padding: 0.55rem 1rem;
+    background: #3a1818;
+    color: #ffd8d8;
+    border: 1px solid #7a3030;
+    border-radius: 6px;
+    font: inherit;
+    cursor: pointer;
+}
+button.danger:hover { background: #4a1c1c; }
+
+/* Tabs (login/register) */
+.tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #334033;
+}
+.tab-btn {
+    padding: 0.6rem 1rem;
+    background: transparent;
+    color: var(--muted);
+    border: none;
+    border-bottom: 2px solid transparent;
+    font: inherit;
+    cursor: pointer;
+}
+.tab-btn.active {
+    color: var(--green);
+    border-bottom-color: var(--green);
+}
+
+.auth-form {
+    max-width: 420px;
+}
+
+/* Filters row */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: end;
+    margin: 1.5rem 0 1rem;
+    padding: 1rem;
+    background: var(--surface);
+    border-radius: var(--radius);
+}
+.filters label {
+    margin: 0;
+    flex: 1 1 160px;
+}
+.filters input,
+.filters select { margin: 0; }
+.filters button { flex: 0 0 auto; }
+
+/* Submissions table */
+.table-scroll { overflow-x: auto; border-radius: var(--radius); }
+
+.submissions-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--surface);
+    border-radius: var(--radius);
+    overflow: hidden;
+    font-size: 0.92rem;
+}
+.submissions-table th,
+.submissions-table td {
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #2c352c;
+    vertical-align: top;
+}
+.submissions-table th {
+    background: #1e231e;
+    color: var(--muted);
+    font-weight: 600;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+.submissions-table tr:last-child td { border-bottom: none; }
+.submissions-table tr:hover td { background: #1e231e; }
+.submissions-table code { font-size: 0.85rem; color: var(--muted); }
+.submissions-table button {
+    padding: 0.35rem 0.7rem;
+    background: transparent;
+    color: var(--green);
+    border: 1px solid #334033;
+    border-radius: 4px;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+.submissions-table button:hover { border-color: var(--green); }
+
+/* Status pills */
+.badge {
+    display: inline-block;
+    padding: 0.15rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: #2a2f2a;
+    color: var(--muted);
+}
+.badge-new         { background: #1f3a5a; color: #c7e2ff; }
+.badge-triaged     { background: #4a3a18; color: #ffe3b0; }
+.badge-in-progress { background: #1f4a2f; color: #b4f0c4; }
+.badge-resolved    { background: #1f3a1f; color: #a8e0a8; }
+.badge-wontfix     { background: #3a1f2a; color: #ffc0c8; }
+
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+.pagination button {
+    padding: 0.45rem 0.9rem;
+    background: transparent;
+    color: var(--text);
+    border: 1px solid #334033;
+    border-radius: 6px;
+    font: inherit;
+    cursor: pointer;
+}
+.pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
+.pagination span { color: var(--muted); font-size: 0.9rem; }
+
+/* Detail dialog */
+#detail-dialog {
+    width: min(720px, 95vw);
+    max-height: 90vh;
+    padding: 0;
+    background: var(--surface);
+    color: var(--text);
+    border: 1px solid #334033;
+    border-radius: var(--radius);
+}
+#detail-dialog::backdrop { background: rgba(0,0,0,0.6); }
+#detail-dialog article {
+    padding: 1.25rem;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.detail-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.detail-header h2 {
+    margin: 0;
+    color: var(--green);
+    font-size: 1.1rem;
+    word-break: break-word;
+}
+.detail-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+#detail-meta {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 0.35rem 1rem;
+    margin: 0 0 1rem;
+    font-size: 0.9rem;
+}
+#detail-meta dt { color: var(--muted); }
+#detail-meta dd { margin: 0; word-break: break-word; }
+#detail-payload {
+    background: #15191a;
+    border: 1px solid #334033;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-size: 0.82rem;
+    max-height: 260px;
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+#detail-dialog h3 {
+    margin: 1rem 0 0.4rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+#detail-dialog textarea,
+#detail-dialog input,
+#detail-dialog select { width: 100%; }

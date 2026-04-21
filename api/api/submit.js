@@ -19,13 +19,14 @@
 //   500  server error
 //   503  Mongo unreachable
 
-import { MongoClient } from 'mongodb';
 // The schemas declare $schema: draft/2020-12; default Ajv export is draft-07
 // and rejects them with "no schema with key or ref ...". Import the 2020 build.
 import Ajv from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import { createHash } from 'crypto';
 
+import { getMongo, reportsDb } from './lib/mongo.js';
+import { cors } from './lib/cors.js';
 import {
     bugSchema,
     issueSchema,
@@ -46,21 +47,6 @@ const validators = {
     'suggestion:power': ajv.compile(powerSchema),
 };
 
-// ───── Cached Mongo client across warm invocations ─────
-let cachedClient = null;
-async function getMongo() {
-    if (cachedClient) return cachedClient;
-    const uri = process.env.MONGODB_URI;
-    if (!uri) throw new Error('MONGODB_URI not set');
-    const client = new MongoClient(uri, {
-        maxPoolSize: 3,          // Vercel functions are short-lived; keep pools small
-        serverSelectionTimeoutMS: 5000,
-    });
-    await client.connect();
-    cachedClient = client;
-    return client;
-}
-
 // ───── Helpers ─────
 const MAX_BODY_BYTES = 60 * 1024;       // 60 KB cap; logs larger than this should be uploaded elsewhere
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000;  // 1 hour
@@ -69,14 +55,6 @@ const RATE_LIMIT_MAX = 10;              // 10 submissions per IP per hour
 function hashIp(raw) {
     const salt = process.env.IP_SALT || 'unsalted';
     return createHash('sha256').update(salt + '|' + raw).digest('hex').slice(0, 32);
-}
-
-function cors(res) {
-    const origin = process.env.ALLOWED_ORIGIN || '';
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    res.setHeader('Access-Control-Max-Age', '600');
 }
 
 function schemaKeyFor(body) {
@@ -148,7 +126,7 @@ export default async function handler(req, res) {
     let db;
     try {
         const client = await getMongo();
-        db = client.db(process.env.MONGODB_DB || 'reports');
+        db = reportsDb(client);
     } catch (err) {
         console.error('mongo connect failed:', err);
         res.status(503).json({ error: 'database unavailable' });
