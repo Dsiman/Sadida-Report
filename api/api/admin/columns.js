@@ -1,10 +1,10 @@
 // /api/admin/columns — CRUD for the Kanban board's column definitions.
 import { ObjectId } from 'mongodb';
-import { getMongo, reportsDb } from '../lib/mongo.js';
-import { requireAdmin } from '../lib/auth.js';
-import { cors } from '../lib/cors.js';
-import { ensureBoardReady } from '../lib/board.js';
-import { slugify } from '../lib/slug.js';
+import { getMongo, reportsDb } from '../../lib/mongo.js';
+import { requireAdmin } from '../../lib/auth.js';
+import { cors } from '../../lib/cors.js';
+import { ensureBoardReady } from '../../lib/board.js';
+import { slugify } from '../../lib/slug.js';
 
 export default async function handler(req, res) {
     cors(req, res);

@@ -3,10 +3,10 @@
 //   (default)     → deletes submissions in every column marked deleteOnRelease,
 //                   returns { deleted, slugs, columns }.
 
-import { getMongo, reportsDb } from '../lib/mongo.js';
-import { requireAdmin } from '../lib/auth.js';
-import { cors } from '../lib/cors.js';
-import { ensureBoardReady } from '../lib/board.js';
+import { getMongo, reportsDb } from '../../lib/mongo.js';
+import { requireAdmin } from '../../lib/auth.js';
+import { cors } from '../../lib/cors.js';
+import { ensureBoardReady } from '../../lib/board.js';
 
 export default async function handler(req, res) {
     cors(req, res);

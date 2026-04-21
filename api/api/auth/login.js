@@ -1,6 +1,6 @@
-import { getMongo, authDb } from '../lib/mongo.js';
-import { verifyPassword, signToken } from '../lib/auth.js';
-import { cors } from '../lib/cors.js';
+import { getMongo, authDb } from '../../lib/mongo.js';
+import { verifyPassword, signToken } from '../../lib/auth.js';
+import { cors } from '../../lib/cors.js';
 
 export default async function handler(req, res) {
     cors(req, res);

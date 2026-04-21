@@ -1,6 +1,6 @@
-import { getMongo, authDb } from '../lib/mongo.js';
-import { hashPassword, signToken } from '../lib/auth.js';
-import { cors } from '../lib/cors.js';
+import { getMongo, authDb } from '../../lib/mongo.js';
+import { hashPassword, signToken } from '../../lib/auth.js';
+import { cors } from '../../lib/cors.js';
 
 // First registration creates the admin; subsequent calls are refused.
 // If you ever need a second user, add them through an admin-protected

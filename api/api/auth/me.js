@@ -1,5 +1,5 @@
-import { readBearer } from '../lib/auth.js';
-import { cors } from '../lib/cors.js';
+import { readBearer } from '../../lib/auth.js';
+import { cors } from '../../lib/cors.js';
 
 // Lets the admin UI verify a stored token on page load without
 // needing to hit a more sensitive endpoint first.

@@ -25,8 +25,8 @@ import Ajv from 'ajv/dist/2020.js';
 import addFormats from 'ajv-formats';
 import { createHash } from 'crypto';
 
-import { getMongo, reportsDb } from './lib/mongo.js';
-import { cors } from './lib/cors.js';
+import { getMongo, reportsDb } from '../lib/mongo.js';
+import { cors } from '../lib/cors.js';
 import {
     bugSchema,
     issueSchema,
@@ -34,7 +34,7 @@ import {
     relicSchema,
     potionSchema,
     powerSchema,
-} from './schemas.js';
+} from '../schemas.js';
 
 // ───── Ajv is expensive to construct; build once per cold start ─────
 const ajv = addFormats(new Ajv({ allErrors: true, removeAdditional: 'all' }));
