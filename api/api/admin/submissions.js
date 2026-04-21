@@ -2,8 +2,7 @@ import { ObjectId } from 'mongodb';
 import { getMongo, reportsDb } from '../lib/mongo.js';
 import { requireAdmin } from '../lib/auth.js';
 import { cors } from '../lib/cors.js';
-
-const VALID_STATUSES = new Set(['new', 'triaged', 'in-progress', 'resolved', 'wontfix']);
+import { ensureBoardReady } from '../lib/board.js';
 
 export default async function handler(req, res) {
     cors(req, res);
@@ -12,17 +11,19 @@ export default async function handler(req, res) {
     const auth = requireAdmin(req);
     if (!auth.ok) return res.status(401).json({ error: auth.reason });
 
-    let submissions;
+    let client;
     try {
-        const client = await getMongo();
-        submissions = reportsDb(client).collection('submissions');
+        client = await getMongo();
+        await ensureBoardReady(client);
     } catch (err) {
         console.error('mongo connect failed:', err);
         return res.status(503).json({ error: 'database unavailable' });
     }
+    const submissions = reportsDb(client).collection('submissions');
+    const columns = reportsDb(client).collection('columns');
 
     if (req.method === 'GET') return handleList(req, res, submissions);
-    if (req.method === 'PATCH') return handleUpdate(req, res, submissions, auth.user);
+    if (req.method === 'PATCH') return handleUpdate(req, res, submissions, columns, auth.user);
     if (req.method === 'DELETE') return handleDelete(req, res, submissions);
     return res.status(405).json({ error: 'method not allowed' });
 }
@@ -44,17 +45,19 @@ async function handleList(req, res, submissions) {
             { 'payload.powerName': regex },
         ];
     }
-    const limit = Math.min(parseInt(q.limit, 10) || 50, 200);
+    const limit = Math.min(parseInt(q.limit, 10) || 200, 500);
     const skip = Math.max(parseInt(q.skip, 10) || 0, 0);
+    // Kanban board wants oldest first; pass ?sort=newest to flip.
+    const direction = q.sort === 'newest' ? -1 : 1;
 
     const [items, total] = await Promise.all([
-        submissions.find(filter).sort({ submittedAt: -1 }).skip(skip).limit(limit).toArray(),
+        submissions.find(filter).sort({ submittedAt: direction }).skip(skip).limit(limit).toArray(),
         submissions.countDocuments(filter),
     ]);
     return res.status(200).json({ items, total, limit, skip });
 }
 
-async function handleUpdate(req, res, submissions, actor) {
+async function handleUpdate(req, res, submissions, columns, actor) {
     const id = typeof req.query.id === 'string' ? req.query.id : null;
     if (!id || !ObjectId.isValid(id)) {
         return res.status(400).json({ error: 'invalid id' });
@@ -63,10 +66,9 @@ async function handleUpdate(req, res, submissions, actor) {
     const updates = {};
 
     if (typeof body.status === 'string') {
-        if (!VALID_STATUSES.has(body.status)) {
-            return res.status(400).json({
-                error: `invalid status; must be one of ${[...VALID_STATUSES].join(', ')}`,
-            });
+        const col = await columns.findOne({ slug: body.status });
+        if (!col) {
+            return res.status(400).json({ error: `unknown column slug: ${body.status}` });
         }
         updates.status = body.status;
     }
