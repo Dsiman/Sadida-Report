@@ -1,3 +1,4 @@
+// /api/admin/columns — CRUD for the Kanban board's column definitions.
 import { ObjectId } from 'mongodb';
 import { getMongo, reportsDb } from '../lib/mongo.js';
 import { requireAdmin } from '../lib/auth.js';
