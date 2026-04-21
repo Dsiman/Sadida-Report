@@ -6,7 +6,7 @@ import { cors } from '../lib/cors.js';
 const VALID_STATUSES = new Set(['new', 'triaged', 'in-progress', 'resolved', 'wontfix']);
 
 export default async function handler(req, res) {
-    cors(res);
+    cors(req, res);
     if (req.method === 'OPTIONS') return res.status(204).end();
 
     const auth = requireAdmin(req);

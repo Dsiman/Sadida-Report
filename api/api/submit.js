@@ -76,7 +76,7 @@ async function enforceRateLimit(db, ipHash) {
 
 // ───── Entry point ─────
 export default async function handler(req, res) {
-    cors(res);
+    cors(req, res);
 
     if (req.method === 'OPTIONS') {
         res.status(204).end();
