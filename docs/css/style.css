@@ -385,6 +385,7 @@ button.danger:hover { background: #4a1c1c; }
     flex-direction: column;
     box-shadow: 0 6px 18px rgba(0,0,0,0.45);
 }
+.menu-popover[hidden] { display: none; }
 .menu-popover button {
     padding: 0.45rem 0.7rem;
     background: transparent;
