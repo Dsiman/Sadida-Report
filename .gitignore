@@ -4,3 +4,7 @@ node_modules/
 .env.local
 *.log
 .DS_Store
+
+# Local-only planning and deploy notes; not tracked in git.
+DEPLOY.md
+PLAN.md
