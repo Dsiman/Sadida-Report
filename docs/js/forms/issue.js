@@ -10,6 +10,7 @@ function buildPayload() {
         area: get('area'),
         description: get('description'),
         expectedBehavior: get('expectedBehavior') || undefined,
+        steamName: get('steamName') || undefined,
     };
 }
 
@@ -29,6 +30,9 @@ function validate(p) {
 
     if (p.expectedBehavior && !rules.maxLen(p.expectedBehavior, 2000)) {
         errs.push({ field: 'Expected behavior', message: 'max 2000 chars' });
+    }
+    if (p.steamName && !rules.maxLen(p.steamName, 40)) {
+        errs.push({ field: 'Steam username', message: 'max 40 chars' });
     }
     return errs;
 }

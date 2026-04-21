@@ -19,6 +19,7 @@ export const bugSchema = {
         otherMods: { type: "string", maxLength: 2000 },
         multiplayer: { enum: ["solo", "host", "client"] },
         runSeed: { type: "string", maxLength: 32 },
+        steamName: { type: "string", maxLength: 40 },
     },
 };
 
@@ -35,6 +36,7 @@ export const issueSchema = {
         area: { enum: ["balance", "ui", "text", "translation", "flow", "other"] },
         description: { type: "string", minLength: 1, maxLength: 5000 },
         expectedBehavior: { type: "string", maxLength: 2000 },
+        steamName: { type: "string", maxLength: 40 },
     },
 };
 
@@ -73,6 +75,7 @@ export const cardSchema = {
         upgradeEffect: { type: "string", maxLength: 1000 },
         artConcept: { type: "string", maxLength: 500 },
         inspiration: { type: "string", maxLength: 200 },
+        steamName: { type: "string", maxLength: 40 },
     },
 };
 
@@ -97,6 +100,7 @@ export const relicSchema = {
         effect: { type: "string", minLength: 1, maxLength: 1000 },
         stackType: { enum: ["None", "Counter", "Charge"] },
         artConcept: { type: "string", maxLength: 500 },
+        steamName: { type: "string", maxLength: 40 },
     },
 };
 
@@ -119,6 +123,7 @@ export const potionSchema = {
         rarity: { enum: ["Common", "Uncommon", "Rare"] },
         targetType: { enum: ["Self", "SingleEnemy", "AllEnemies", "None"] },
         effect: { type: "string", minLength: 1, maxLength: 1000 },
+        steamName: { type: "string", maxLength: 40 },
     },
 };
 
@@ -143,5 +148,6 @@ export const powerSchema = {
         stackType: { enum: ["None", "Counter", "Single"] },
         triggerHook: { enum: ["AfterCardPlayed", "AfterDamageReceived", "SOT", "EOT", "Passive"] },
         effect: { type: "string", minLength: 1, maxLength: 1000 },
+        steamName: { type: "string", maxLength: 40 },
     },
 };

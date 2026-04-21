@@ -1,10 +1,36 @@
 import { attachFormHandler, rules } from '../submit.js';
 
 const form = document.getElementById('bug-form');
+const logTextarea = form.elements.consoleLog;
+const logFile = document.getElementById('log-file');
+const logStatus = document.getElementById('log-file-status');
+
+const MAX_LOG_BYTES = 50 * 1024; // matches the schema's consoleLog maxLength
+
+if (logFile) {
+    logFile.addEventListener('change', async (ev) => {
+        const file = ev.target.files && ev.target.files[0];
+        if (!file) {
+            logStatus.textContent = '';
+            return;
+        }
+        if (file.size > MAX_LOG_BYTES) {
+            logStatus.textContent = `File is ${Math.round(file.size / 1024)} KB — max is ${MAX_LOG_BYTES / 1024} KB. Trim to the tail around the crash.`;
+            logFile.value = '';
+            return;
+        }
+        try {
+            const text = await file.text();
+            logTextarea.value = text;
+            logStatus.textContent = `Loaded ${file.name} (${Math.round(file.size / 1024)} KB).`;
+        } catch (err) {
+            logStatus.textContent = `Couldn't read the file: ${err.message}`;
+        }
+    });
+}
 
 function buildPayload() {
     const get = (name) => (form.elements[name]?.value ?? '').trim();
-    // modVersion is pulled out by the shared handler; everything else is payload.
     return {
         summary: get('summary'),
         description: get('description'),
@@ -14,6 +40,7 @@ function buildPayload() {
         otherMods: get('otherMods') || undefined,
         multiplayer: get('multiplayer'),
         runSeed: get('runSeed') || undefined,
+        steamName: get('steamName') || undefined,
     };
 }
 
@@ -37,6 +64,9 @@ function validate(p) {
     }
     if (p.consoleLog && !rules.maxLen(p.consoleLog, 50000)) {
         errs.push({ field: 'Console log', message: 'max 50 KB — trim to the tail around the crash' });
+    }
+    if (p.steamName && !rules.maxLen(p.steamName, 40)) {
+        errs.push({ field: 'Steam username', message: 'max 40 chars' });
     }
     return errs;
 }

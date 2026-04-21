@@ -12,12 +12,51 @@
         <p>Your submission is in the queue. No need to file it twice.</p>
     </header>
     <main class="container">
+        <section id="ticket-card" class="ticket-receipt" hidden>
+            <p class="helptext">Save this ticket. You can use it to check the status at any time.</p>
+            <div class="ticket-code-row">
+                <code id="ticket-code" class="ticket-code">STS-XXXXXX</code>
+                <button type="button" id="copy-ticket" class="ghost">Copy</button>
+            </div>
+            <p class="helptext">
+                <a id="status-link" href="status.html">Check this ticket's status →</a>
+            </p>
+        </section>
+
         <p>If this was urgent (a crash that's blocking your run, multiplayer desync), mention it in the Sadida Discord so I see it faster.</p>
         <p>
             <a href="index.html">Submit another</a>
             &nbsp;·&nbsp;
+            <a href="status.html">Look up a ticket</a>
+            &nbsp;·&nbsp;
             <a href="https://github.com/DamianIsaacs/Sadida">Sadida repo</a>
         </p>
     </main>
+
+    <script type="module">
+        const params = new URLSearchParams(location.search);
+        const t = (params.get('t') || '').toUpperCase();
+        if (/^STS-[A-Z2-9]{6}$/.test(t)) {
+            document.getElementById('ticket-code').textContent = t;
+            document.getElementById('status-link').href = 'status.html?t=' + encodeURIComponent(t);
+            document.getElementById('ticket-card').hidden = false;
+
+            document.getElementById('copy-ticket').addEventListener('click', async () => {
+                try {
+                    await navigator.clipboard.writeText(t);
+                    const btn = document.getElementById('copy-ticket');
+                    const prev = btn.textContent;
+                    btn.textContent = 'Copied!';
+                    setTimeout(() => { btn.textContent = prev; }, 1500);
+                } catch {
+                    // Clipboard API can fail silently on insecure contexts; fall back.
+                    const r = document.createRange();
+                    r.selectNode(document.getElementById('ticket-code'));
+                    window.getSelection().removeAllRanges();
+                    window.getSelection().addRange(r);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

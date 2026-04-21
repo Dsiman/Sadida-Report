@@ -29,6 +29,7 @@ function buildPayload() {
         upgradeEffect: get('upgradeEffect') || undefined,
         artConcept: get('artConcept') || undefined,
         inspiration: get('inspiration') || undefined,
+        steamName: get('steamName') || undefined,
     };
 }
 
@@ -69,6 +70,7 @@ function validate(p) {
     if (p.upgradeEffect && !rules.maxLen(p.upgradeEffect, 1000)) errs.push({ field: 'Upgrade effect', message: 'max 1000 chars' });
     if (p.artConcept && !rules.maxLen(p.artConcept, 500)) errs.push({ field: 'Art concept', message: 'max 500 chars' });
     if (p.inspiration && !rules.maxLen(p.inspiration, 200)) errs.push({ field: 'Inspiration', message: 'max 200 chars' });
+    if (p.steamName && !rules.maxLen(p.steamName, 40)) errs.push({ field: 'Steam username', message: 'max 40 chars' });
 
     return errs;
 }

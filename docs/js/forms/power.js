@@ -16,6 +16,7 @@ function buildPayload() {
         stackType: get('stackType') || undefined,
         triggerHook: get('triggerHook') || undefined,
         effect: get('effect'),
+        steamName: get('steamName') || undefined,
     };
 }
 
@@ -35,6 +36,7 @@ function validate(p) {
 
     if (!rules.required(p.effect)) errs.push({ field: 'Effect', message: 'required' });
     else if (!rules.maxLen(p.effect, 1000)) errs.push({ field: 'Effect', message: 'max 1000 chars' });
+    if (p.steamName && !rules.maxLen(p.steamName, 40)) errs.push({ field: 'Steam username', message: 'max 40 chars' });
 
     return errs;
 }

@@ -5,6 +5,7 @@
 // this is safe to run on every cold start.
 
 import { reportsDb } from './mongo.js';
+import { issueUniqueTicket } from './ticket.js';
 
 const DEFAULT_COLUMNS = [
     { slug: 'new',              name: 'New',              order: 0, deleteOnRelease: false },
@@ -46,5 +47,17 @@ export async function ensureBoardReady(client) {
             { $set: { status: newSlug } },
         );
     }
+
+    // Backfill tickets for any submissions from before the ticket system.
+    // Keep the lookup indexed so collision checks in issueUniqueTicket stay cheap.
+    await submissions.createIndex({ ticket: 1 }, { unique: true, sparse: true });
+    const needTicket = await submissions
+        .find({ ticket: { $exists: false } }, { projection: { _id: 1 } })
+        .toArray();
+    for (const d of needTicket) {
+        const ticket = await issueUniqueTicket(submissions);
+        await submissions.updateOne({ _id: d._id }, { $set: { ticket } });
+    }
+
     seededInThisProcess = true;
 }

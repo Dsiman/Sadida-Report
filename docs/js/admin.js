@@ -174,14 +174,19 @@ function renderCard(item) {
     });
 
     card.innerHTML = `
-        <div class="kanban-card-kind"><code></code></div>
+        <div class="kanban-card-kind">
+            <code class="kanban-card-type"></code>
+            ${item.ticket ? `<code class="kanban-card-ticket"></code>` : ''}
+        </div>
         <div class="kanban-card-title"></div>
         <div class="kanban-card-foot">
             <span class="kanban-card-date"></span>
             ${(item.tags && item.tags.length) ? `<span class="kanban-card-tags"></span>` : ''}
         </div>
     `;
-    card.querySelector('code').textContent = kind;
+    card.querySelector('.kanban-card-type').textContent = kind;
+    const ticketEl = card.querySelector('.kanban-card-ticket');
+    if (ticketEl) ticketEl.textContent = item.ticket;
     card.querySelector('.kanban-card-title').textContent = title;
     card.querySelector('.kanban-card-date').textContent = when;
     const tagEl = card.querySelector('.kanban-card-tags');
@@ -354,8 +359,10 @@ function openDetail(item) {
     const submitted = new Date(item.submittedAt).toLocaleString();
     const updated = item.updatedAt ? new Date(item.updatedAt).toLocaleString() : '—';
     meta.innerHTML = `
+        <dt>Ticket</dt><dd><code>${escapeHtml(item.ticket || '—')}</code></dd>
         <dt>ID</dt><dd><code>${escapeHtml(item._id)}</code></dd>
         <dt>Mod version</dt><dd>${escapeHtml(item.modVersion || '—')}</dd>
+        <dt>Steam username</dt><dd>${escapeHtml(item.steamName || '—')}</dd>
         <dt>Submitted</dt><dd>${escapeHtml(submitted)}</dd>
         <dt>Last update</dt><dd>${escapeHtml(updated)}${item.updatedBy ? ` by ${escapeHtml(item.updatedBy)}` : ''}</dd>
         <dt>Source IP (hashed)</dt><dd><code>${escapeHtml(item.sourceIp || '—')}</code></dd>

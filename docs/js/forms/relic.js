@@ -15,6 +15,7 @@ function buildPayload() {
         stackType: get('stackType') || undefined,
         effect: get('effect'),
         artConcept: get('artConcept') || undefined,
+        steamName: get('steamName') || undefined,
     };
 }
 
@@ -37,6 +38,7 @@ function validate(p) {
     else if (!rules.maxLen(p.effect, 1000)) errs.push({ field: 'Effect', message: 'max 1000 chars' });
 
     if (p.artConcept && !rules.maxLen(p.artConcept, 500)) errs.push({ field: 'Art concept', message: 'max 500 chars' });
+    if (p.steamName && !rules.maxLen(p.steamName, 40)) errs.push({ field: 'Steam username', message: 'max 40 chars' });
 
     return errs;
 }

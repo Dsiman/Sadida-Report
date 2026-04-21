@@ -27,6 +27,7 @@ import { createHash } from 'crypto';
 
 import { getMongo, reportsDb } from '../lib/mongo.js';
 import { cors } from '../lib/cors.js';
+import { issueUniqueTicket } from '../lib/ticket.js';
 import {
     bugSchema,
     issueSchema,
@@ -139,10 +140,21 @@ export default async function handler(req, res) {
         return;
     }
 
+    let ticket;
+    try {
+        ticket = await issueUniqueTicket(db.collection('submissions'));
+    } catch (err) {
+        console.error('ticket issue failed:', err);
+        res.status(500).json({ error: 'could not allocate ticket' });
+        return;
+    }
+
     const doc = {
         type: body.type,
         subtype: body.type === 'suggestion' ? body.subtype : null,
         modVersion: body.modVersion || null,
+        ticket,
+        steamName: typeof body.steamName === 'string' && body.steamName.trim() ? body.steamName.trim().slice(0, 40) : null,
         submittedAt: new Date(),
         sourceIp: ipHash,
         payload: stripMeta(body),
@@ -152,7 +164,7 @@ export default async function handler(req, res) {
 
     try {
         const result = await db.collection('submissions').insertOne(doc);
-        res.status(200).json({ id: result.insertedId.toString() });
+        res.status(200).json({ id: result.insertedId.toString(), ticket });
     } catch (err) {
         console.error('mongo insert failed:', err);
         res.status(500).json({ error: 'write failed' });
@@ -161,6 +173,6 @@ export default async function handler(req, res) {
 
 // Strip the top-level routing fields so the `payload` holds only the form's own data.
 function stripMeta(body) {
-    const { type, subtype, modVersion, ...rest } = body;
+    const { type, subtype, modVersion, steamName, ...rest } = body;
     return rest;
 }

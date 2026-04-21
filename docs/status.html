@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sadida — Check ticket status</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header>
+        <h1>Check ticket status</h1>
+        <p>Enter the STS-XXXXXX code you got after submitting, or pick one from your history below.</p>
+    </header>
+    <main class="container">
+        <form id="lookup-form" class="status-lookup">
+            <label>
+                <span>Ticket code</span>
+                <input type="text" name="ticket" id="ticket-input"
+                       placeholder="STS-XXXXXX"
+                       autocomplete="off"
+                       spellcheck="false"
+                       maxlength="10" />
+            </label>
+            <button type="submit" class="primary">Look up</button>
+        </form>
+
+        <section id="lookup-result" class="lookup-result" hidden></section>
+
+        <section id="history-section" hidden>
+            <h2>Your recent submissions</h2>
+            <p class="helptext">
+                These are stored locally in your browser. Clearing site data removes them — save the ticket codes somewhere safe if you want to find them later.
+            </p>
+            <ul id="history-list" class="history-list"></ul>
+        </section>
+
+        <p class="helptext" style="margin-top:2rem">
+            <a href="index.html">← Back to the submission portal</a>
+        </p>
+    </main>
+    <script type="module" src="js/status.js"></script>
+</body>
+</html>

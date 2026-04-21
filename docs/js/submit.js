@@ -63,9 +63,21 @@ export function attachFormHandler({
                 body: JSON.stringify(body),
             });
             if (res.ok) {
-                // Redirect to a generic thank-you page; keeps the flow simple and
-                // avoids needing per-form success copy.
-                window.location.href = resolveFromCurrent('thanks.html');
+                const data = await safeJson(res);
+                const ticket = data && data.ticket;
+                if (ticket) {
+                    saveToLocalHistory({
+                        ticket,
+                        type,
+                        subtype,
+                        title: firstTitleField(payload),
+                        submittedAt: new Date().toISOString(),
+                    });
+                }
+                // Redirect to a generic thank-you page; include the ticket in
+                // the URL so thanks.html can show it with a copy button.
+                const base = resolveFromCurrent('thanks.html');
+                window.location.href = ticket ? `${base}?t=${encodeURIComponent(ticket)}` : base;
                 return;
             }
             const data = await safeJson(res);
@@ -131,4 +143,42 @@ function resolveFromCurrent(rel) {
 
 async function safeJson(res) {
     try { return await res.json(); } catch { return null; }
+}
+
+// ────────────────────────────────────────────────────────────────
+// Local ticket history — stored in localStorage, keeps the last 20.
+// ────────────────────────────────────────────────────────────────
+
+const HISTORY_KEY = 'sadida-report.my-tickets';
+const HISTORY_MAX = 20;
+
+export function readLocalHistory() {
+    try {
+        const raw = localStorage.getItem(HISTORY_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [];
+    } catch {
+        return [];
+    }
+}
+
+function saveToLocalHistory(entry) {
+    try {
+        const list = readLocalHistory().filter(e => e.ticket !== entry.ticket);
+        list.unshift(entry);
+        if (list.length > HISTORY_MAX) list.length = HISTORY_MAX;
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+    } catch {
+        // localStorage can fail (quota, privacy mode). We don't block on it.
+    }
+}
+
+function firstTitleField(payload) {
+    return payload.summary
+        || payload.cardName
+        || payload.relicName
+        || payload.potionName
+        || payload.powerName
+        || '(no title)';
 }

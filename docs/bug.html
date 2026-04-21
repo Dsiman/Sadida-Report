@@ -78,8 +78,22 @@
                 </label>
                 <label>
                     <span>Console log</span>
+                    <div class="log-upload">
+                        <input type="file" id="log-file" accept=".log,.txt" />
+                        <span class="log-upload-status" id="log-file-status"></span>
+                    </div>
                     <textarea name="consoleLog" rows="8"
-                        placeholder="Paste the tail of the Godot log here (see instructions above). Max ~50 KB."></textarea>
+                        placeholder="Pick a .log file above, or paste the tail here. Max ~50 KB."></textarea>
+                </label>
+            </fieldset>
+
+            <fieldset>
+                <legend>About you (optional)</legend>
+                <label>
+                    <span>Steam username</span>
+                    <input type="text" name="steamName" maxlength="40"
+                        placeholder="Only if you want a heads-up when this is fixed. Not shared." />
+                    <span class="helptext">Stored with your submission so I can follow up if your bug drives a fix. Never shown publicly.</span>
                 </label>
             </fieldset>
 
