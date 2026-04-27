@@ -3,6 +3,9 @@
   "functions": {
     "api/submit.js": {
       "maxDuration": 10
+    },
+    "api/ticket.js": {
+      "maxDuration": 10
     }
   }
 }

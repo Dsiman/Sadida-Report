@@ -555,6 +555,39 @@ button.danger:hover { background: #4a1c1c; }
 .ticket-detail-meta dt { color: var(--muted); }
 .ticket-detail-meta dd { margin: 0; }
 
+.ticket-comments {
+    margin: 1.25rem 0;
+    border-top: 1px solid var(--border, #2a2f30);
+    padding-top: 1rem;
+}
+.ticket-comments h4 {
+    margin: 0 0 0.6rem;
+    font-size: 0.95rem;
+}
+.ticket-comment {
+    background: var(--surface-2, #15191a);
+    border: 1px solid var(--border, #2a2f30);
+    border-radius: 6px;
+    padding: 0.6rem 0.8rem;
+    margin: 0 0 0.6rem;
+}
+.ticket-comment-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+}
+.ticket-comment-date { color: var(--muted); }
+.ticket-comment-body p { margin: 0 0 0.5rem; }
+.ticket-comment-body p:last-child { margin-bottom: 0; }
+.ticket-comment-body code {
+    background: rgba(255,255,255,0.05);
+    padding: 0.05rem 0.25rem;
+    border-radius: 3px;
+}
+
 .history-list {
     list-style: none;
     margin: 0;

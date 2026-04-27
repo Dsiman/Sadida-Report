@@ -1,6 +1,7 @@
 // Status-lookup page: looks up a ticket by its public code and shows
-// a read-only view. Also renders the submitter's local history of
-// previously submitted tickets (from localStorage) with current status.
+// a read-only view, including the maintainer comment thread that was
+// posted on the underlying GitHub issue. Also renders the submitter's
+// local history (from localStorage).
 
 import { API_BASE } from './config.js';
 import { readLocalHistory } from './submit.js';
@@ -28,8 +29,6 @@ function init() {
         input.value = v.slice(0, 10);
     });
 
-    // If the page was opened with ?t=STS-XXXXXX (e.g. from thanks.html),
-    // pre-fill and look up immediately.
     const params = new URLSearchParams(location.search);
     const t = (params.get('t') || '').toUpperCase();
     if (TICKET_RE.test(t)) {
@@ -69,8 +68,8 @@ async function doLookup(raw) {
 }
 
 function renderTicket(t) {
-    const kind = t.subtype ? `${t.type}:${t.subtype}` : t.type;
-    const submitted = new Date(t.submittedAt).toLocaleString();
+    const kind = t.subtype ? `${t.type}:${t.subtype}` : (t.type || 'report');
+    const submitted = t.submittedAt ? new Date(t.submittedAt).toLocaleString() : '—';
     const updated = t.updatedAt ? new Date(t.updatedAt).toLocaleString() : null;
     const title = t.title || '(no title)';
     const status = t.status || 'new';
@@ -88,8 +87,49 @@ function renderTicket(t) {
                 <dt>Submitted</dt><dd>${escapeHtml(submitted)}</dd>
                 ${updated ? `<dt>Last update</dt><dd>${escapeHtml(updated)}</dd>` : ''}
             </dl>
+            ${renderComments(t.comments)}
             <p class="helptext">If the state hasn't changed in a while and this is blocking you, drop a line in the Sadida Discord with your ticket code.</p>
         </article>`;
+}
+
+function renderComments(comments) {
+    if (!Array.isArray(comments) || comments.length === 0) {
+        return `
+            <section class="ticket-comments">
+                <h4>Replies from the maintainer</h4>
+                <p class="helptext">No replies yet. Check back later — comments left on this ticket will appear here.</p>
+            </section>`;
+    }
+    const items = comments.map(c => `
+        <article class="ticket-comment">
+            <header class="ticket-comment-head">
+                <strong>${escapeHtml(c.author || 'maintainer')}</strong>
+                <span class="ticket-comment-date">${escapeHtml(formatDate(c.createdAt))}</span>
+            </header>
+            <div class="ticket-comment-body">${renderMarkdownLite(c.body || '')}</div>
+        </article>
+    `).join('');
+    return `
+        <section class="ticket-comments">
+            <h4>Replies from the maintainer</h4>
+            ${items}
+        </section>`;
+}
+
+// Tiny, safe Markdown rendering: escape HTML first, then apply a few inline
+// transforms (code, bold, italics, links, paragraph breaks). Anything not
+// covered shows as plain text — better than letting raw HTML through.
+function renderMarkdownLite(src) {
+    const escaped = escapeHtml(src);
+    const withCode = escaped.replace(/`([^`\n]+)`/g, (_, c) => `<code>${c}</code>`);
+    const withBold = withCode.replace(/\*\*([^*\n]+)\*\*/g, (_, c) => `<strong>${c}</strong>`);
+    const withItalics = withBold.replace(/(^|[^*])\*([^*\n]+)\*(?!\*)/g, (m, pre, c) => `${pre}<em>${c}</em>`);
+    const withLinks = withItalics.replace(
+        /\[([^\]\n]+)\]\((https?:\/\/[^)\s]+)\)/g,
+        (_, text, url) => `<a href="${url}" rel="noopener noreferrer" target="_blank">${text}</a>`,
+    );
+    const paragraphs = withLinks.split(/\n{2,}/).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`);
+    return paragraphs.join('');
 }
 
 function renderHistory() {
@@ -122,7 +162,12 @@ function renderHistory() {
 }
 
 function prettyStatus(slug) {
-    return slug.split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
+    return String(slug).split('-').map(w => w[0].toUpperCase() + w.slice(1)).join(' ');
+}
+
+function formatDate(iso) {
+    if (!iso) return '';
+    try { return new Date(iso).toLocaleString(); } catch { return iso; }
 }
 
 function notice(kind, html) {
