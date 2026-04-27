@@ -39,6 +39,12 @@ export function attachFormHandler({
         ev.preventDefault();
         clearNotice(errorHost);
 
+        // Browser-native required/pattern check first — focuses the first
+        // missing field and shows the standard tooltip ("Please fill out this
+        // field"). Forms still use novalidate so this only fires on submit,
+        // not on every blur.
+        if (!form.reportValidity()) return;
+
         const payload = buildPayload();
         const errors = validate(payload);
         if (errors.length > 0) {
